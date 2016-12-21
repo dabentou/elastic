@@ -1,8 +1,11 @@
+/*
 package com.liu;
 
+*/
 /**
  * Created by Administrator on 2016/12/20.
- */
+ *//*
+
 
 import org.apache.lucene.queryparser.xml.FilterBuilder;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
@@ -34,9 +37,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+*/
 /**
  * 实现附近的人功能，最大限额1000人，1米到100米范围内的人
- */
+ *//*
+
 public class ES4 {
     // 创建索引
     public static void createIndex(String indexName, String indexType) throws IOException {
@@ -138,8 +143,10 @@ public class ES4 {
         SearchRequestBuilder srb = client.prepareSearch(index).setTypes(type);
         srb.setFrom(0).setSize(1000);//1000人
         // lon, lat位于谦的坐标，查询距离于谦1米到1000米
-        FilterBuilder builder = geoDistanceRangeFilter("location").point(lon, lat).from("1m").to("100m").optimizeBbox("memory").geoDistance(GeoDistance.PLANE);
-        srb.setPostFilter(builder);
+      */
+/*  FilterBuilder builder = geoDistanceRangeFilter("location").point(lon, lat).from("1m").to("100m").optimizeBbox("memory").geoDistance(GeoDistance.PLANE);
+        srb.setPostFilter(builder);*//*
+
         // 获取距离多少公里 这个才是获取点与点之间的距离的
         GeoDistanceSortBuilder sort = SortBuilders.geoDistanceSort("location");
         sort.unit(DistanceUnit.METERS);
@@ -183,3 +190,4 @@ public class ES4 {
         //client.close();// 1.5.2用完不用关闭
     }
 }
+*/

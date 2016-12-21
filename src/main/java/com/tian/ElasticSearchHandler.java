@@ -1,5 +1,7 @@
 package com.tian;
 
+import org.elasticsearch.action.delete.DeleteResponse;
+import org.elasticsearch.action.deletebyquery.DeleteByQueryResponse;
 import org.elasticsearch.action.index.IndexRequestBuilder;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
@@ -40,14 +42,15 @@ public class ElasticSearchHandler {
 
 
 
-        Settings settings = Settings
-                .settingsBuilder()
+       /* Settings settings = Settings. settingsBuilder()
                 .put("cluster.name","elasticsearch")
                 .put("client.transport.sniff", true)
                 .build();
         client = TransportClient.builder().settings(settings).build();
         client.addTransportAddress(
-                 new InetSocketTransportAddress(new InetSocketAddress("localhost", 9300)));
+                 new InetSocketTransportAddress(new InetSocketAddress("localhost", 9300)));*/
+
+        client = new TransportClient().addTransportAddress(new InetSocketTransportAddress("127.0.0.1", 9300));
 
     }
 
@@ -113,18 +116,38 @@ public class ElasticSearchHandler {
 
     public static void main(String[] args) throws Exception {
         ElasticSearchHandler esHandler = new ElasticSearchHandler();
-        List<String> jsondata = DataFactory.getInitJsonData();
+        //一。增加数据
+       /* List<String> jsondata = DataFactory.getInitJsonData();
         String indexname = "indexdemo";
         String type = "typedemo";
-        esHandler.createIndexResponse(indexname, type, jsondata);
-        //查询条件
-        QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery("name", "感冒");
-        /*QueryBuilder queryBuilder = QueryBuilders.boolQuery()
-          .must(QueryBuilders.termQuery("id", 1));*/
+        esHandler.createIndexResponse(indexname, type, jsondata);*/
+        //二。查询条件
+       /* QueryBuilder queryBuilder = QueryBuilders.multiMatchQuery("仁和 感冒 颗粒","name");
         List<Medicine> result = esHandler.searcher(queryBuilder, indexname, type);
         for(int i=0; i<result.size(); i++){
             Medicine medicine = result.get(i);
             System.out.println("(" + medicine.getId() + ")药品名称:" +medicine.getName() + "\t\t" + medicine.getFunction());
-        }
+        }*/
+        //三。删除数据
+        esHandler.delete();
+    }
+
+    public void delete(){
+//        Example 1
+
+        DeleteResponse response = client
+                .prepareDelete("indexdemo", "typedemo", "AVkgKEpV9nFw4IUikTLw")
+                .execute()
+                .actionGet();
+//        该方法是根据index、type、_Id三部分来进行记录的删除，但是在实际的操作过程中，该方法应用较少，主要是其_Id难以直接获取，
+
+//        Example 2
+
+        /*DeleteByQueryResponse dqrb = client.prepareDeleteByQuery("product")
+                .setTypes("wxt")
+                .setQuery(QueryBuilders.boolQuery()
+                        .must(QueryBuilders.matchQuery("ID", "000099"))
+                        .must(QueryBuilders.matchQuery("number", 55)))
+                .execute().actionGet();*/
     }
 }
